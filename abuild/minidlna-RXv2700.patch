@@ -1,0 +1,20 @@
+diff --git a/upnpsoap.c b/upnpsoap.c
+index 20f6b60..d8b5b40 100644
+--- a/upnpsoap.c
++++ b/upnpsoap.c
+@@ -1907,7 +1907,14 @@ SearchContentDirectory(struct upnphttp * h, const char * action)
+ 		groupBy[0] = '\0';
+ 
+ 	where = parse_search_criteria(SearchCriteria, sep);
+-	DPRINTF(E_DEBUG, L_HTTP, "Translated SearchCriteria: %s\n", where);
++	DPRINTF(E_DEBUG, L_HTTP, "Original translated SearchCriteria: %s\n", where);
++	char *start_REF_ID_NULL=strstr(where," and REF_ID is NULL");
++	char *end_REF_ID_NULL = start_REF_ID_NULL + strlen(" and REF_ID is NULL");
++	if (start_REF_ID_NULL!= NULL)
++    {
++		memmove(start_REF_ID_NULL, end_REF_ID_NULL,strlen(end_REF_ID_NULL) + 1);
++		DPRINTF(E_DEBUG, L_HTTP, "Modified translated SearchCriteria: %s\n", where);
++	}
+ 
+ 	totalMatches = sql_get_int_field(db, "SELECT (select count(distinct DETAIL_ID)"
+ 	                                     " from OBJECTS o left join DETAILS d on (o.DETAIL_ID = d.ID)"
